@@ -33,6 +33,7 @@ mod tests{
     
     #[test]
     fn it_work(){
-        assert_eq!(2, 2);
+        let gopa = 2;
+        assert_eq!(gopa, 2);
     }
 }
