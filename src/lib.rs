@@ -4,12 +4,40 @@ mod console;
 mod longest;
 mod shapes;
 mod riddle;
+mod boxpsv;
+mod refcounter;
+mod weakref;
+mod rustthread;
+mod objects;
+mod post;
 
-pub fn run_tests() -> Result<(), Box<dyn Error>>{
-    run_rectangle_test();
-    run_longest_test();
-    run_riddle_test();
+pub enum Tests{
+    None,
+    Longest,
+    Riddle,
+    Shapes,
+    Box,
+    RefCounter,
+    Weakref,
+    Thread,
+    Object,
+    Post,
+}
 
+pub fn run_tests(test: Tests) -> Result<(), Box<dyn Error>>{
+    match test {
+        Tests::Shapes => run_rectangle_test(),
+        Tests::Longest => run_longest_test(),
+        Tests::Riddle => run_riddle_test(),
+        Tests::Box => boxpsv::box_test(),
+        Tests::RefCounter => refcounter::refcounter_test(),
+        Tests::Weakref => weakref::weakref_test(),
+        Tests::Thread => rustthread::thread_test(),
+        Tests::Object => objects::object_test(),
+        Tests::Post => post::post_test(),
+        _ => println!("Реализация данного теста отсутствует!"),
+    }
+    
     Ok(())
 }
 
@@ -37,3 +65,4 @@ mod tests{
         assert_eq!(gopa, 2);
     }
 }
+
