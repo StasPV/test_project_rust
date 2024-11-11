@@ -1,17 +1,17 @@
 
 
-
 pub(crate) fn post_test() {
     println!("Тестирование класса Post");
+    let message = "Сегодня на обед я ел салат";
     let mut post = Post::new();
-    post.add_text("Сегодня на обед я ел салат");
+    post.add_text(message);
     assert_eq!("", post.content());
     
     post.request_review();
     assert_eq!("", post.content());
 
     post.approve();
-    assert_eq!("Сегодня на обед я ел салат", post.content())
+    assert_eq!(message, post.content())
 
 }
 
@@ -33,7 +33,7 @@ impl Post {
     }
 
     pub fn content(&self) -> &str{
-        ""
+        self.state.as_ref().unwrap().content(&self)
     }
 
     pub fn request_review(&mut self) {
@@ -53,6 +53,9 @@ impl Post {
 trait State{
     fn request_review(self: Box<Self>) -> Box<dyn State>;
     fn approve(self: Box<Self>) -> Box<dyn State>;
+    fn content<'a>(&self, post: &'a Post) -> &'a str{
+        ""
+    }
 }
 
 struct Draft{}
@@ -86,5 +89,9 @@ impl State for Published {
 
     fn approve(self: Box<Self>) -> Box<dyn State> {
         self
+    }
+
+    fn content<'a>(&self, post: &'a Post) -> &'a str {
+        &post.content
     }
 }
