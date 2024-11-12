@@ -26,16 +26,26 @@ pub enum Tests{
 
 pub fn run_tests(test: Tests) -> Result<(), Box<dyn Error>>{
     match test {
-        Tests::Shapes => run_rectangle_test(),
-        Tests::Longest => run_longest_test(),
-        Tests::Riddle => run_riddle_test(),
-        Tests::Box => boxpsv::box_test(),
-        Tests::RefCounter => refcounter::refcounter_test(),
-        Tests::Weakref => weakref::weakref_test(),
-        Tests::Thread => rustthread::thread_test(),
-        Tests::Object => objects::object_test(),
-        Tests::Post => post::post_test(),
-        _ => println!("Реализация данного теста отсутствует!"),
+        Tests::Shapes       => run_rectangle_test(),
+        Tests::Longest      => run_longest_test(),
+        Tests::Riddle       => run_riddle_test(),
+        Tests::Box          => boxpsv::box_test(),
+        Tests::RefCounter   => refcounter::refcounter_test(),
+        Tests::Weakref      => weakref::weakref_test(),
+        Tests::Thread       => rustthread::thread_test(),
+        Tests::Object       => objects::object_test(),
+        Tests::Post         => post::post_test(),
+        _                   => {
+            let mut num = 5;
+            let r1 = &num as *const i32;
+            let r2 = &mut num as *mut i32;
+            unsafe {
+                println!("r1 равно: {}", *r1);
+                *r2 += 3;
+                println!("r2 равно: {}", *r2*2);
+            }
+            println!("исходное значение num:{}", num);
+        },
     }
     
     Ok(())
