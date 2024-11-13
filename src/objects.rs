@@ -1,66 +1,76 @@
+use crate::TestModule;
 
-pub(crate) fn object_test() {
-    println!("Урок по объектной технологии");
-    let screen = Screen{
-        components: vec![
-            Box::new(
-                SelectBox{
+pub struct Objects;
+impl TestModule for Objects {
+    fn new() -> Self {
+        Objects {}
+    }
+
+    fn run(&self) {
+        println!("Урок по объектной технологии");
+        let screen = Screen {
+            components: vec![
+                Box::new(SelectBox {
                     width: 75,
                     height: 10,
                     options: vec![
                         String::from("Yes"),
                         String::from("Maybe"),
                         String::from("No"),
-                    ]
-                }
-            ),
-            Box::new(
-                Button{
+                    ],
+                }),
+                Box::new(Button {
                     width: 50,
                     height: 10,
                     label: String::from("Ok"),
-                }
-            ),
-        ]
-    };
-    screen.run();
+                }),
+            ],
+        };
+        screen.run();
+    }
 }
 
 trait Draw {
     fn draw(&self);
 }
 
-struct Screen{
+struct Screen {
     pub components: Vec<Box<dyn Draw>>,
 }
 
-impl Screen{
-    fn run(&self){
-        for component in self.components.iter(){
+impl Screen {
+    fn run(&self) {
+        for component in self.components.iter() {
             component.draw();
         }
     }
 }
 
-struct Button{
+struct Button {
     width: u32,
     height: u32,
     label: String,
 }
 
-impl Draw for Button{
-    fn draw(&self){
-        println!("Рисуем кнопку: {}:{}:{}", &self.width, &self.height, &self.label);
+impl Draw for Button {
+    fn draw(&self) {
+        println!(
+            "Рисуем кнопку: {}:{}:{}",
+            &self.width, &self.height, &self.label
+        );
     }
 }
-struct SelectBox{
+struct SelectBox {
     width: u32,
     height: u32,
     options: Vec<String>,
 }
 
-impl Draw for SelectBox{
-    fn draw(&self){
-        println!("Рисуем область выделения: {}:{}:{:?}", &self.width, &self.height, &self.options);
+impl Draw for SelectBox {
+    fn draw(&self) {
+        println!(
+            "Рисуем область выделения: {}:{}:{:?}",
+            &self.width, &self.height, &self.options
+        );
     }
 }

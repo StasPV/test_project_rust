@@ -1,47 +1,36 @@
 use std::error::Error;
 
-mod console;
-mod longest;
-mod shapes;
-mod riddle;
-mod boxpsv;
-mod refcounter;
-mod weakref;
-mod rustthread;
-mod objects;
-mod post;
+// mod console;
+pub mod longest;
+pub mod shapes;
+pub mod riddle;
+pub mod boxpsv;
+pub mod refcounter;
+pub mod weakref;
+pub mod rustthread;
+pub mod objects;
+mod testmodule;
+use testmodule::TestModule;
+pub mod post;
 
-pub enum Tests{
-    None,
-    Longest,
-    Riddle,
-    Shapes,
-    Box,
-    RefCounter,
-    Weakref,
-    Thread,
-    Object,
-    Post,
-}
+pub fn run_test<T: TestModule>() -> Result<(), Box<dyn Error>>{
+    let stc: T = T::new();
+    stc.run();
 
-pub fn run_tests(test: Tests) -> Result<(), Box<dyn Error>>{
-    match test {
-        Tests::Shapes       => shapes::rectangle_test(),
-        Tests::Longest      => longest::longest_test(),
-        Tests::Riddle       => riddle::riddle_test(),
-        Tests::Box          => boxpsv::box_test(),
-        Tests::RefCounter   => refcounter::refcounter_test(),
-        Tests::Weakref      => weakref::weakref_test(),
-        Tests::Thread       => rustthread::thread_test(),
-        Tests::Object       => objects::object_test(),
-        Tests::Post         => post::post_test(),
-        _                   => {
-            run_none_unsafe();
-        },
-    }
-    
     Ok(())
 }
+
+
+ pub struct SimpleTest{}
+ impl TestModule for SimpleTest{
+    fn new()->Self {
+        SimpleTest{}
+    }
+
+    fn run(&self) {
+        run_test_abs();
+    }
+ } 
 
 fn run_none_unsafe()-> i32{
     let mut num = 5;
@@ -56,9 +45,21 @@ fn run_none_unsafe()-> i32{
     return num;
 }
 
+extern "C"{
+    fn abs(input: i32)-> i32;
+}
+
+fn run_test_abs()-> i32{
+    let mut num = -run_none_unsafe();
+    unsafe{
+        num = abs(num);
+    }
+    println!("Абсолютное значение для -{num} = {num}");
+    return num;
+}
 #[cfg(test)]
 mod tests{
-    use crate::run_none_unsafe;
+    use crate::{run_none_unsafe, run_test_abs};
 
     // use super::*;
     
@@ -66,6 +67,12 @@ mod tests{
     fn it_work(){
         let gopa = run_none_unsafe();
         assert_eq!(gopa, 8);
+    }
+
+    #[test]
+    fn test_abs(){
+        let res = run_test_abs();
+        assert_eq!(res, 3);
     }
 }
 

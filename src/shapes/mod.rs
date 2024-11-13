@@ -1,26 +1,33 @@
 use std::io;
+use crate::TestModule;
 
-pub fn rectangle_test(){
-    let rect1 = Rectangle{
-        width: 30,
-        height: 50,
-    };
-    let mut size = String::new();
-    
-    println!("Пожалуйста введите желаемый размер - ");
-    io::stdin()
-       .read_line(&mut size)
-       .expect("Ошибка чтения строки");
-    let size:u32 = size.trim().parse().expect("Пожалуйста введите число!");
-    let rect2 = Rectangle::square(size);
-
-    println!("rect1 is {rect1:?} and his area {}", rect1.area());
-    println!("Can rect1 hold rect2? - {}", rect1.can_hold(&rect2));
-    let config_max = Some(3u8);
-    if let Some(max) = config_max{
-        println!("Максимальное значение конфигурации {max}");
+pub struct ShapesTest;
+impl TestModule for ShapesTest {
+    fn new()->Self {
+        ShapesTest{}
     }
 
+    fn run(&self) {
+        let rect1 = Rectangle{
+            width: 30,
+            height: 50,
+        };
+        let mut size = String::new();
+        
+        println!("Пожалуйста введите желаемый размер - ");
+        io::stdin()
+           .read_line(&mut size)
+           .expect("Ошибка чтения строки");
+        let size:u32 = size.trim().parse().expect("Пожалуйста введите число!");
+        let rect2 = Rectangle::square(size);
+        
+        println!("rect1 is {rect1:?} and his area {}", rect1.area());
+        println!("Can rect1 hold rect2? - {}", rect1.can_hold(&rect2));
+        let config_max = Some(3u8);
+        if let Some(max) = config_max{
+            println!("Максимальное значение конфигурации {max}");
+        }
+    }
 }
 
 #[derive(Debug)]

@@ -1,18 +1,24 @@
+use crate::TestModule;
 
+pub struct PostTest;
+impl TestModule for PostTest {
+    fn new()->Self {
+        PostTest{}
+    }
 
-pub(crate) fn post_test() {
-    println!("Тестирование класса Post");
-    let message = "Сегодня на обед я ел салат";
-    let mut post = Post::new();
-    post.add_text(message);
-    assert_eq!("", post.content());
-    
-    post.request_review();
-    assert_eq!("", post.content());
-
-    post.approve();
-    assert_eq!(message, post.content())
-
+    fn run(&self) {
+        println!("Тестирование класса Post");
+        let message = "Сегодня на обед я ел салат";
+        let mut post = Post::new();
+        post.add_text(message);
+        assert_eq!("", post.content());
+        
+        post.request_review();
+        assert_eq!("", post.content());
+        
+        post.approve();
+        assert_eq!(message, post.content())
+    }
 }
 
 struct Post{

@@ -1,13 +1,21 @@
 use std::sync::{Mutex, mpsc, Arc};
 use std::thread;
 use std::time::Duration;
+use crate::TestModule;
 
-pub fn thread_test() {
-    println!("Урок по многопоточности");
-    cannels();
+pub struct ThreadTest;
+impl TestModule for ThreadTest{
+    fn new()->Self {
+        ThreadTest{}
+    }
 
-    println!("Mutex");
-    mutex();
+    fn run(&self) {
+        println!("Урок по многопоточности");
+        cannels();
+        
+        println!("Mutex");
+        mutex();
+    }
 }
 
 fn mutex(){

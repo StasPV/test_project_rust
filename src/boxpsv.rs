@@ -1,16 +1,23 @@
+use crate::TestModule;
 
-pub fn box_test(){
-    println!("Урок по умным указателям.");
-
-    let x = 5;
-    let y = MyBox::new(x);
-    assert_eq!(5, *y, "Проверка равенства 5 и значения по указателю {}", *y);
-
-    let name = MyBox::new("Stanislav");
-    hello(&name);
-
-    let list = List::Cons(1, Box::new(List::Cons(2, Box::new(List::Cons(3, Box::new(List::Nil))))));
-    println!("Значение по указателю: {list:?}.");
+pub struct BoxTest;
+impl TestModule for BoxTest{
+    fn new()->Self {
+        BoxTest{}
+    }
+    fn run(&self) {
+        println!("Урок по умным указателям.");
+        
+        let x = 5;
+        let y = MyBox::new(x);
+        assert_eq!(5, *y, "Проверка равенства 5 и значения по указателю {}", *y);
+        
+        let name = MyBox::new("Stanislav");
+        hello(&name);
+        
+        let list = List::Cons(1, Box::new(List::Cons(2, Box::new(List::Cons(3, Box::new(List::Nil))))));
+        println!("Значение по указателю: {list:?}.");
+    }
 }
 
 fn hello(name: &str){

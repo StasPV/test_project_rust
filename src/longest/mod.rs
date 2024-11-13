@@ -1,8 +1,17 @@
-pub fn longest_test(){
-    let string1 = String::from("abcd");
-    let string2 = "zxc";
-    let result = longest(string1.as_str(), string2);
-    println!("The longest string is {result}");
+use crate::TestModule;
+
+pub struct LongestTest;
+impl TestModule for LongestTest {
+    fn new()->Self {
+        LongestTest{}
+    }
+
+    fn run(&self) {
+        let string1 = String::from("abcd");
+        let string2 = "zxc";
+        let result = longest(string1.as_str(), string2);
+        println!("The longest string is {result}");
+    }
 }
 
 fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {

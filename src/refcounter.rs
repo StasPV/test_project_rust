@@ -1,32 +1,40 @@
+use crate::TestModule;
 use std::{cell::RefCell, rc::Rc};
 use List::{Cons, Nil};
 
-pub fn refcounter_test() {
-    println!("Урок по счетчику ссылок!");
-
-    let a = Rc::new(Cons(5, RefCell::new(Rc::new(Nil))));
-    println!("A initial rc count = {}", Rc::strong_count(&a));
-    println!("A next item = {:?}", a.tail());
-    
-    let b = Rc::new(Cons(5, RefCell::new(Rc::clone(&a))));
-    println!("A rc count after B creation = {}", Rc::strong_count(&a));
-    println!("B initial rc count = {}", Rc::strong_count(&b));
-    println!("B next item = {:?}", b.tail());
-    
-    if let Some(link) = a.tail(){
-        *link.borrow_mut() = Rc::clone(&b);
+pub struct RefCounters;
+impl TestModule for RefCounters {
+    fn new() -> Self {
+        RefCounters {}
     }
-    println!("B rc count after changing A = {}", Rc::strong_count(&b));
-    println!("A rc count after changing A = {}", Rc::strong_count(&a));
 
-    // let value = Rc::new(RefCell::new(5));
-    // let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
-    // let b = Cons(Rc::new(RefCell::new(3)), Rc::clone(&a));
-    // let c = Cons(Rc::new(RefCell::new(4)), Rc::clone(&a));
-    // *value.borrow_mut() += 10;
-    // println!("Текущее значение А: {a:?}");
-    // println!("Текущее значение B: {b:?}");
-    // println!("Текущее значение C: {c:?}");
+    fn run(&self) {
+        println!("Урок по счетчику ссылок!");
+
+        let a = Rc::new(Cons(5, RefCell::new(Rc::new(Nil))));
+        println!("A initial rc count = {}", Rc::strong_count(&a));
+        println!("A next item = {:?}", a.tail());
+
+        let b = Rc::new(Cons(5, RefCell::new(Rc::clone(&a))));
+        println!("A rc count after B creation = {}", Rc::strong_count(&a));
+        println!("B initial rc count = {}", Rc::strong_count(&b));
+        println!("B next item = {:?}", b.tail());
+
+        if let Some(link) = a.tail() {
+            *link.borrow_mut() = Rc::clone(&b);
+        }
+        println!("B rc count after changing A = {}", Rc::strong_count(&b));
+        println!("A rc count after changing A = {}", Rc::strong_count(&a));
+
+        // let value = Rc::new(RefCell::new(5));
+        // let a = Rc::new(Cons(Rc::clone(&value), Rc::new(Nil)));
+        // let b = Cons(Rc::new(RefCell::new(3)), Rc::clone(&a));
+        // let c = Cons(Rc::new(RefCell::new(4)), Rc::clone(&a));
+        // *value.borrow_mut() += 10;
+        // println!("Текущее значение А: {a:?}");
+        // println!("Текущее значение B: {b:?}");
+        // println!("Текущее значение C: {c:?}");
+    }
 }
 
 #[derive(Debug)]
@@ -35,20 +43,20 @@ enum List {
     Nil,
 }
 
-impl List{
-    fn tail(&self) -> Option<&RefCell<Rc<List>>>{
-        match self{
+impl List {
+    fn tail(&self) -> Option<&RefCell<Rc<List>>> {
+        match self {
             Cons(_, item) => Some(item),
             Nil => None,
         }
     }
 }
 
-trait Messenger {
+pub trait Messenger {
     fn send(&self, msg: &str);
 }
 
-struct LimitTracker<'a, T: Messenger> {
+pub struct LimitTracker<'a, T: Messenger> {
     messenger: &'a T,
     value: usize,
     max: usize,
@@ -88,7 +96,7 @@ mod test {
     use crate::refcounter::LimitTracker;
     use std::cell::RefCell;
 
-    use super::Messenger;
+    use crate::refcounter::Messenger;
 
     struct MockMessenger {
         sent_messages: RefCell<Vec<String>>,
