@@ -3,10 +3,10 @@ use std::{
     cmp::Ordering
 };
 use rand::Rng;
-use crate::TestModule;
+use crate::BaseObject;
 
 pub struct Riddle;
-impl TestModule for Riddle {
+impl BaseObject for Riddle {
     fn new()->Self {
         Riddle{}
     }

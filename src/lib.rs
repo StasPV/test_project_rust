@@ -1,5 +1,6 @@
 use std::error::Error;
 
+mod testmodule;
 // mod console;
 pub mod longest;
 pub mod shapes;
@@ -9,11 +10,11 @@ pub mod refcounter;
 pub mod weakref;
 pub mod rustthread;
 pub mod objects;
-mod testmodule;
-use testmodule::TestModule;
 pub mod post;
 
-pub fn run_test<T: TestModule>() -> Result<(), Box<dyn Error>>{
+use testmodule::BaseObject;
+
+pub fn run_test<T: BaseObject>() -> Result<(), Box<dyn Error>>{
     let stc: T = T::new();
     stc.run();
 
@@ -22,7 +23,7 @@ pub fn run_test<T: TestModule>() -> Result<(), Box<dyn Error>>{
 
 
  pub struct SimpleTest{}
- impl TestModule for SimpleTest{
+ impl BaseObject for SimpleTest{
     fn new()->Self {
         SimpleTest{}
     }

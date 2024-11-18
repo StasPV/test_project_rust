@@ -1,9 +1,9 @@
-use crate::TestModule;
+use crate::BaseObject;
 use std::{cell::RefCell, rc::Rc};
 use List::{Cons, Nil};
 
 pub struct RefCounters;
-impl TestModule for RefCounters {
+impl BaseObject for RefCounters {
     fn new() -> Self {
         RefCounters {}
     }

@@ -1,4 +1,4 @@
-pub trait TestModule{
+pub trait BaseObject{
     fn new()->Self;
     fn run(&self);
  }

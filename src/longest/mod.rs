@@ -1,7 +1,7 @@
-use crate::TestModule;
+use crate::BaseObject;
 
 pub struct LongestTest;
-impl TestModule for LongestTest {
+impl BaseObject for LongestTest {
     fn new()->Self {
         LongestTest{}
     }

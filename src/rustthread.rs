@@ -1,10 +1,10 @@
 use std::sync::{Mutex, mpsc, Arc};
 use std::thread;
 use std::time::Duration;
-use crate::TestModule;
+use crate::BaseObject;
 
 pub struct ThreadTest;
-impl TestModule for ThreadTest{
+impl BaseObject for ThreadTest{
     fn new()->Self {
         ThreadTest{}
     }

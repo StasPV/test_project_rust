@@ -1,9 +1,9 @@
 use std::cell::RefCell;
 use std::rc::{Rc, Weak};
-use crate::TestModule;
+use crate::BaseObject;
 
 pub struct WeakTest;
-impl TestModule for WeakTest {
+impl BaseObject for WeakTest {
     fn new()->Self {
         WeakTest{}
     }

@@ -1,7 +1,7 @@
-use crate::TestModule;
+use crate::BaseObject;
 
 pub struct BoxTest;
-impl TestModule for BoxTest{
+impl BaseObject for BoxTest{
     fn new()->Self {
         BoxTest{}
     }

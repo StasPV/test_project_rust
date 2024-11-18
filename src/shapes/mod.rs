@@ -1,8 +1,8 @@
 use std::io;
-use crate::TestModule;
+use crate::BaseObject;
 
 pub struct ShapesTest;
-impl TestModule for ShapesTest {
+impl BaseObject for ShapesTest {
     fn new()->Self {
         ShapesTest{}
     }
