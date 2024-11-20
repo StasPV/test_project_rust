@@ -77,8 +77,8 @@ where
     pub fn set_value(&mut self, value: usize) {
         self.value = value;
 
-        let percentge_of_max = self.value as f64 / self.max as f64;
-        match percentge_of_max {
+        let percentage_of_max = self.value as f64 / self.max as f64;
+        match percentage_of_max {
             percent if percent >= 1.0 => self.messenger.send("Ошибка, вы превысили квоту"),
             percent if percent >= 0.95 => self
                 .messenger
