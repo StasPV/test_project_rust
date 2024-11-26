@@ -38,6 +38,7 @@ impl BaseObject for RefCounters {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 enum List {
     Cons(i32, RefCell<Rc<List>>),
     Nil,

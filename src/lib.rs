@@ -11,6 +11,7 @@ pub mod weakref;
 pub mod rustthread;
 pub mod objects;
 pub mod post;
+pub mod file;
 
 
 use testmodule::BaseObject;

@@ -1,3 +1,4 @@
+#![allow(unused_variables, unused_features)]
 use crate::BaseObject;
 
 pub struct BoxTest;
@@ -24,6 +25,7 @@ fn hello(name: &str){
     println!("Hello, {name}");
 }
 
+#[allow(dead_code)]
 #[derive(Debug)]
 enum List{
     Cons(i32, Box<List>),

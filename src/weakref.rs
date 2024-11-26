@@ -33,6 +33,7 @@ impl BaseObject for WeakTest {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct Node{
     value: i32,
     parent: RefCell<Weak<Node>>,
