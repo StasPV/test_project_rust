@@ -3,6 +3,7 @@
         "Пожалуйста",
         "BaseObject",
         "boxpsv",
+        "cubesat",
         "refcounter",
         "rustthread",
         "testmodule",

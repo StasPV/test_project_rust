@@ -12,6 +12,7 @@ pub mod rustthread;
 pub mod objects;
 pub mod post;
 pub mod file;
+pub mod cubesat;
 
 
 use testmodule::BaseObject;

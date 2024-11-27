@@ -40,6 +40,16 @@
             },
             "args": [],
             "cwd": "${workspaceFolder}"
-        }
-    ]
+        },
+        {
+            "name": "(Windows) Launch",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/target/debug/test_project_rust.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "integratedTerminal"
+        }    ]
 }
