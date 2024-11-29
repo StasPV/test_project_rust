@@ -42,14 +42,15 @@
             "cwd": "${workspaceFolder}"
         },
         {
-            "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
+            "name": "(Windows) Launch",
             "program": "${workspaceRoot}/target/debug/test_project_rust.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "preLaunchTask": "rust: cargo build"
         }    ]
 }

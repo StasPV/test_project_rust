@@ -8,28 +8,32 @@ impl BaseObject for CubeSat{
 
     fn run(&self) {
         println!("Проект по главе 4.");
-        let sat_a = Satellite { id: 0 };
-        let sat_b = Satellite { id: 1 };
-        let sat_c = Satellite { id: 2 };
-        let status_a = check_status(sat_a);
-        let status_b = check_status(sat_b);
-        let status_c = check_status(sat_c);
+        let base: GroundStation = GroundStation{};
+        let mut mailbox = Mailbox{messages: vec![]};
+        let sat_ids = fetch_sat_ids();
 
-        println!("sat a:{:?}, sat b:{:?}, sat c:{:?}", status_a, status_b, status_c);
+        for sat_id in sat_ids{
+            let sat = base.connect(sat_id);
+            let msg = Message{to: sat_id, content: String::from("hello")};
+            base.send(&mut mailbox, msg);
+        }
 
-        let status_a = check_status(sat_a);
-        let status_b = check_status(sat_b);
-        let status_c = check_status(sat_c);
-
-        println!("sat a:{:?}, sat b:{:?}, sat c:{:?}", status_a, status_b, status_c);
+        let sat_ids = fetch_sat_ids();
+        for sat_id in sat_ids {
+            let sat = base.connect(sat_id);
+            let msg = sat.recv(&mut mailbox);
+            println!("{:?}: {:?}", sat, msg.unwrap().content);
+        }
     }
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 enum StatusMessage{
     Ok,
 }
 
+#[allow(dead_code)]
 fn check_status(sat_id: Satellite) ->StatusMessage{
     StatusMessage::Ok
 }
@@ -37,7 +41,18 @@ fn check_status(sat_id: Satellite) ->StatusMessage{
 #[derive(Debug)]
 struct Satellite{
     id: u64,
-    mailbox: Mailbox,
+}
+
+impl Satellite{
+    fn new(id: u64)->Self{
+        Satellite{
+            id,
+        }
+    }
+
+    fn recv(&self, mailbox: &mut Mailbox)->Option<Message>{
+        mailbox.deliver(&self)
+    }
 }
 
 #[derive(Debug)]
@@ -45,4 +60,39 @@ struct Mailbox{
     messages: Vec<Message>,
 }
 
-type Message = String;
+impl Mailbox{
+    fn post(&mut self, msg: Message){
+        self.messages.push(msg);
+    }
+    
+    fn deliver(&mut self, recipient: & Satellite) -> Option<Message> {
+        for i in 0..self.messages.len(){
+            if self.messages[i].to == recipient.id{
+                let msg = self.messages.remove(i);
+                return Some(msg);
+            }
+        }
+        None
+    }
+}
+
+#[derive(Debug)]
+struct Message{
+    to: u64,
+    content: String,
+}
+
+struct GroundStation;
+impl GroundStation{
+    fn connect(&self, sat_id: u64)->Satellite{
+        Satellite::new(sat_id)
+    }
+
+    fn send(&self, mailbox: &mut Mailbox, msg: Message){
+        mailbox.post(msg);
+    }
+}
+
+fn fetch_sat_ids()->Vec<u64>{
+    vec![1,2,3]
+}
