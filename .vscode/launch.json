@@ -52,5 +52,6 @@
             "environment": [],
             "console": "integratedTerminal",
             "preLaunchTask": "rust: cargo build"
-        }    ]
+        }    
+    ]
 }
