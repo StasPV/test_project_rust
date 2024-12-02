@@ -121,7 +121,7 @@ impl CPU{
 mod chip8_tests{
     use crate::chip8::CPU;
     #[test]
-    pub fn add_5_7(){
+    fn add_5_7(){
         let mut cpu = CPU::new();
         cpu.registers[0] = 5 as u8;
         cpu.registers[1] = 7 as u8;
