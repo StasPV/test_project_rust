@@ -9,13 +9,7 @@ impl BaseObject for Chip8 {
     fn run(&self) {
         println!("Упражнение по имитации CPU");
 
-        let mut cpu = CPU{
-            registers: [0; 16],
-            memory:[0; 4096],
-            position_on_memory: 0,
-            stack:[0; 16],
-            stack_pointer: 0,
-        };
+        let mut cpu = CPU::new();
         cpu.registers[0] = 5;
         cpu.registers[1] = 10;
 
@@ -42,6 +36,16 @@ struct CPU{
 }
 
 impl CPU{
+    fn new()->Self{
+        CPU{
+            registers: [0; 16],
+            memory:[0; 4096],
+            position_on_memory: 0,
+            stack:[0; 16],
+            stack_pointer: 0,
+        }
+    }
+    
     fn read_opcode(&self)-> u16{
         let p = self.position_on_memory;
         let op_byte1 = self.memory[p] as u16;
@@ -110,5 +114,20 @@ impl CPU{
         }else{
             self.registers[0xf] = 0;
         }
+    }
+}
+
+#[cfg(test)]
+mod chip8_tests{
+    use crate::chip8::CPU;
+    #[test]
+    pub fn add_5_7(){
+        let mut cpu = CPU::new();
+        cpu.registers[0] = 5 as u8;
+        cpu.registers[1] = 7 as u8;
+        let mem = &mut cpu.memory;
+        mem[0x000] = 0x80; mem[0x001] = 0x14;
+        cpu.run();
+        assert_eq!(cpu.registers[0], 12);
     }
 }

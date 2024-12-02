@@ -38,6 +38,5 @@ mod tests{
         let res = simpletest::run_test_abs();
         assert_eq!(res, 3);
     }
-    
 }
 
