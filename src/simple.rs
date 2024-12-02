@@ -20,6 +20,10 @@ impl BaseObject for Simple{
         let new_addr = ptr.offset(4);
         println!("{:p} -> {:p}", ptr, new_addr);
        }
+
+       let a = 40;
+       let b: Box<i32> = Box::new(60);
+       println!("{} + {} = {}", a, b, a + *b);
    }
 }
 
