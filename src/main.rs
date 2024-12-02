@@ -4,7 +4,7 @@ use std::process;
 use test_project_rust as tpr;
 
 fn main() {
-    if let Err(e) =  tpr::run_test::<tpr::chip8::Chip8>(){
+    if let Err(e) =  tpr::run_test::<tpr::simpletest::SimpleTest>(){
         eprintln!("Application error: {e}");
         process::exit(1)
     }
