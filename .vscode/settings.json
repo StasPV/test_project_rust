@@ -6,7 +6,10 @@
         "cubesat",
         "refcounter",
         "rustthread",
+        "simpletest",
         "testmodule",
+        "trasmute",
         "Weakref"
-    ]
+    ],
+    "debug.onTaskErrors": "abort"
 }
