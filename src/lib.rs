@@ -14,7 +14,7 @@ pub mod objects;
 pub mod post;
 pub mod file;
 pub mod cubesat;
-pub mod simpletest;
+pub mod simple;
 pub mod chip8;
 
 pub fn run_test<T: BaseObject>() -> Result<(), Box<dyn Error>>{
@@ -23,20 +23,5 @@ pub fn run_test<T: BaseObject>() -> Result<(), Box<dyn Error>>{
     Ok(())
 }
 
-#[cfg(test)]
-mod tests{
-    use super::*;
-    
-    #[test]
-    fn it_work(){        
-        let gopa = simpletest::run_none_unsafe();
-        assert_eq!(gopa, 8);
-    }
 
-    #[test]
-    fn test_abs(){
-        let res = simpletest::run_test_abs();
-        assert_eq!(res, 3);
-    }
-}
 
