@@ -6,6 +6,7 @@
         "boxpsv",
         "cannels",
         "cubesat",
+        "fview",
         "recived",
         "refcounter",
         "rustthread",

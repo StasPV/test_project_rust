@@ -16,6 +16,7 @@ pub mod file;
 pub mod cubesat;
 pub mod simple;
 pub mod chip8;
+pub mod fview;
 
 pub fn run_test<T: BaseObject>() -> Result<(), Box<dyn Error>>{
     T::new().run();
