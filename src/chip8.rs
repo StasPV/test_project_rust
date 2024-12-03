@@ -25,6 +25,7 @@ impl BaseObject for Chip8 {
         cpu.run();
         println!("5 + (10*2) + (10*2) = {}", cpu.registers[0]);
     }
+
 }
 
 struct CPU{

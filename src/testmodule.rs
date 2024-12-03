@@ -1,4 +1,7 @@
-pub trait BaseObject{
+
+pub trait BaseObject<RHS=Self>{
     fn new()->Self;
-    fn run(&self);
+    fn run(&self){
+        dbg!("Пустая реализация типа {:?}");
+    }
  }

@@ -25,6 +25,7 @@ impl BaseObject for Simple{
        let b: Box<i32> = Box::new(60);
        println!("{} + {} = {}", a, b, a + *b);
    }
+
 }
 
 #[allow(dead_code)]
