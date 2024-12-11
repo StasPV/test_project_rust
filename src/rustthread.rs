@@ -1,4 +1,5 @@
 use crate::BaseObject;
+use std::sync::mpsc::{Sender,Receiver};
 use std::sync::{mpsc, Arc, Mutex};
 use std::thread;
 use std::time::Duration;
@@ -77,45 +78,57 @@ enum MessageType {
     Pang,
 }
 
+struct Actor<T>{
+    sender: Sender<T>,
+    receiver: Receiver<T>,
+}
+impl<T> Actor<T>{
+    fn new(sender: Sender<T>, receiver: Receiver<T>)->Self{
+        Actor { sender, receiver }
+    }
+}
+
 fn two_chanels() {
     let mut handles = vec![];
     let (request_tx, request_rx) = mpsc::channel::<MessageType>();
     let (response_tx, response_rx) = mpsc::channel::<MessageType>();
+    let actor1 = Actor::new(request_tx, response_rx);
+    let actor2 = Actor::new(response_tx, request_rx);
     let mut count: u32 = 1;
 
-    request_tx.send(MessageType::Ping).unwrap();
+    actor1.sender.send(MessageType::Ping).unwrap();
     let handle = thread::spawn(move || loop {
-        let message = match response_rx.recv() {
+        let message = match actor1.receiver.recv() {
             Ok(value) => value,
             Err(_) => return,
         };
         println!("Канал 1. Получено сообщение: {:?} {}", message, count);
         match message {
-            MessageType::Pong => match request_tx.send(MessageType::Ping){
+            MessageType::Pong => match actor1.sender.send(MessageType::Ping){
                 Err(_)=> return,
                 _=>(),
             }
-            // MessageType::Pang => break,
+            MessageType::Pang => return,
             _ => (),
         }
 
         count += 1;
         if count > 10 {
-            request_tx.send(MessageType::Pang).unwrap();
+            actor1.sender.send(MessageType::Pang).unwrap();
             return;
         }
     });
     handles.push(handle);
 
     let handle = thread::spawn(move || loop {
-        let message = match request_rx.recv() {
+        let message = match actor2.receiver.recv() {
             Ok(value) => value,
             Err(_) => return,
         };
         println!("Канал 2. Получено сообщение: {:?}", message);
         match message {
             MessageType::Ping => {
-                match response_tx.send(MessageType::Pong){
+                match actor2.sender.send(MessageType::Pong){
                     Err(_)=> return,
                     _=>(),
                 }
