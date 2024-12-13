@@ -1,8 +1,11 @@
 use crate::BaseObject;
-use std::sync::mpsc::{Sender,Receiver};
+use std::fmt::Display;
+use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{mpsc, Arc, Mutex};
 use std::thread;
 use std::time::Duration;
+
+static MAX_COUNT: u32 = 57;
 
 pub struct RustThread;
 impl BaseObject for RustThread {
@@ -71,71 +74,56 @@ fn cannels() {
     }
 }
 
-#[derive(Debug)]
-enum MessageType {
-    Ping,
-    Pong,
+#[derive(Debug, PartialEq)]
+enum Message {
+    Ping(u32),
+    Pong(u32),
     Pang,
 }
-
-struct Actor<T>{
-    sender: Sender<T>,
-    receiver: Receiver<T>,
+impl Display for Message {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Message::Ping(counter) => write!(f, "Ping: {}", counter),
+            Message::Pong(counter) => write!(f, "Pong: {}", counter),
+            Message::Pang => write!(f, "PANG!"),
+        }
+    }
 }
-impl<T> Actor<T>{
-    fn new(sender: Sender<T>, receiver: Receiver<T>)->Self{
+impl Message {
+    fn get_message(id: u32, value: u32) -> Self {
+        match id {
+            1 => Message::Ping(value),
+            2 => Message::Pong(value),
+            _ => Message::Pang,
+        }
+    }
+}
+
+struct Actor {
+    sender: Sender<Message>,
+    receiver: Receiver<Message>,
+}
+impl Actor {
+    fn new(sender: Sender<Message>, receiver: Receiver<Message>) -> Self {
         Actor { sender, receiver }
     }
 }
 
 fn two_chanels() {
     let mut handles = vec![];
-    let (request_tx, request_rx) = mpsc::channel::<MessageType>();
-    let (response_tx, response_rx) = mpsc::channel::<MessageType>();
+    let (request_tx, request_rx) = mpsc::channel::<Message>();
+    let (response_tx, response_rx) = mpsc::channel::<Message>();
     let actor1 = Actor::new(request_tx, response_rx);
     let actor2 = Actor::new(response_tx, request_rx);
-    let mut count: u32 = 1;
 
-    actor1.sender.send(MessageType::Ping).unwrap();
-    let handle = thread::spawn(move || loop {
-        let message = match actor1.receiver.recv() {
-            Ok(value) => value,
-            Err(_) => return,
-        };
-        println!("Канал 1. Получено сообщение: {:?} {}", message, count);
-        match message {
-            MessageType::Pong => match actor1.sender.send(MessageType::Ping){
-                Err(_)=> return,
-                _=>(),
-            }
-            MessageType::Pang => return,
-            _ => (),
-        }
-
-        count += 1;
-        if count > 10 {
-            actor1.sender.send(MessageType::Pang).unwrap();
-            return;
-        }
+    actor1.sender.send(Message::Ping(1)).unwrap();
+    let handle = thread::spawn(move || {
+        run_actor(&actor1, 1);
     });
     handles.push(handle);
 
-    let handle = thread::spawn(move || loop {
-        let message = match actor2.receiver.recv() {
-            Ok(value) => value,
-            Err(_) => return,
-        };
-        println!("Канал 2. Получено сообщение: {:?}", message);
-        match message {
-            MessageType::Ping => {
-                match actor2.sender.send(MessageType::Pong){
-                    Err(_)=> return,
-                    _=>(),
-                }
-            },
-            MessageType::Pang => return,
-            _ => (),
-        }
+    let handle = thread::spawn(move || {
+        run_actor(&actor2, 2);
     });
     handles.push(handle);
     for handle in handles {
@@ -143,4 +131,43 @@ fn two_chanels() {
     }
 
     println!("Игра завершена!")
+}
+
+fn run_actor(actor: &Actor, number_chanel: u32) {
+    loop {
+        let message = match actor.receiver.recv() {
+            Ok(value) => value,
+            Err(_) => return,
+        };
+        println!("Канал {}. Получено сообщение: {}", number_chanel, message);
+        match message {
+            Message::Ping(val) | Message::Pong(val) => {
+                let count = val + 1;
+                if count > MAX_COUNT {
+                    _ = actor.sender.send(Message::Pang);
+                    return;
+                } else {
+                    match actor
+                        .sender
+                        .send(Message::get_message(number_chanel, count))
+                    {
+                        Err(_) => return,
+                        _ => (),
+                    }
+                }
+            }
+            Message::Pang => return,
+        }
+    }
+}
+
+#[cfg(test)]
+mod thread_tests{
+    use crate::rustthread::Message;
+
+    #[test]
+    fn check_get_message(){
+        let message = Message::get_message(1, 10);
+        assert_eq!(Message::Ping(10), message);
+    }
 }
