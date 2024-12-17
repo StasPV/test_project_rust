@@ -1,8 +1,5 @@
 use std::error::Error;
 
-// mod testmodule;
-// use testmodule::BaseObject;
-
 pub mod longest;
 pub mod shapes;
 pub mod riddle;

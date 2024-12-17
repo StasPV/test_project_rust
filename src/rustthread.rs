@@ -102,10 +102,11 @@ impl Message {
 struct Actor {
     sender: Sender<Message>,
     receiver: Receiver<Message>,
+    number: u32,
 }
 impl Actor {
-    fn new(sender: Sender<Message>, receiver: Receiver<Message>) -> Self {
-        Actor { sender, receiver }
+    fn new(sender: Sender<Message>, receiver: Receiver<Message>, number: u32) -> Self {
+        Actor { sender, receiver, number }
     }
 }
 
@@ -113,17 +114,17 @@ fn two_chanels() {
     let mut handles = vec![];
     let (request_tx, request_rx) = mpsc::channel::<Message>();
     let (response_tx, response_rx) = mpsc::channel::<Message>();
-    let actor1 = Actor::new(request_tx, response_rx);
-    let actor2 = Actor::new(response_tx, request_rx);
+    let actor1 = Actor::new(request_tx, response_rx, 1);
+    let actor2 = Actor::new(response_tx, request_rx, 2);
 
     actor1.sender.send(Message::Ping(1)).unwrap();
     let handle = thread::spawn(move || {
-        run_actor(&actor1, 1);
+        run_actor(&actor1);
     });
     handles.push(handle);
 
     let handle = thread::spawn(move || {
-        run_actor(&actor2, 2);
+        run_actor(&actor2);
     });
     handles.push(handle);
     for handle in handles {
@@ -133,13 +134,13 @@ fn two_chanels() {
     println!("Игра завершена!")
 }
 
-fn run_actor(actor: &Actor, number_chanel: u32) {
+fn run_actor(actor: &Actor) {
     loop {
         let message = match actor.receiver.recv() {
             Ok(value) => value,
             Err(_) => return,
         };
-        println!("Канал {}. Получено сообщение: {}", number_chanel, message);
+        println!("Канал {}. Получено сообщение: {}", actor.number, message);
         match message {
             Message::Ping(val) | Message::Pong(val) => {
                 let count = val + 1;
@@ -149,7 +150,7 @@ fn run_actor(actor: &Actor, number_chanel: u32) {
                 } else {
                     match actor
                         .sender
-                        .send(Message::get_message(number_chanel, count))
+                        .send(Message::get_message(actor.number, count))
                     {
                         Err(_) => return,
                         _ => (),
