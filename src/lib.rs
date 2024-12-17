@@ -1,7 +1,7 @@
 use std::error::Error;
 
-mod testmodule;
-use testmodule::BaseObject;
+// mod testmodule;
+// use testmodule::BaseObject;
 
 pub mod longest;
 pub mod shapes;
@@ -24,5 +24,12 @@ pub fn run_test<T: BaseObject>() -> Result<(), Box<dyn Error>>{
     Ok(())
 }
 
+pub trait BaseObject<RHS=Self>{
+    fn new()->Self;
+    fn run(&self){
+        println!
+        ("Пустая реализация типа {}", std::any::type_name_of_val(self));
+    }
+ }
 
 
