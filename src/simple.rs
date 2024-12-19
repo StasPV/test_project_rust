@@ -24,6 +24,10 @@ impl BaseObject for Simple{
        let a = 40;
        let b: Box<i32> = Box::new(60);
        println!("{} + {} = {}", a, b, a + *b);
+
+       let typed_fn = compare_endian as *const fn()->();
+       println!("compare_endian as usize: 0x{:x}", compare_endian as usize);
+       println!("compare_endian as ptr: {:p}", typed_fn);
    }
 
 }
