@@ -8,7 +8,7 @@
             "type": "cppvsdbg",
             "request": "launch",
             "name": "Debug executable (Windows)",
-            "program": "${workspaceRoot}/target/debug/test_project_rust.exe",
+            "program": "${workspaceRoot}/target/debug/${fileWorkspaceFolderBasename}.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
