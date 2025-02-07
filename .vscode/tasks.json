@@ -8,7 +8,20 @@
 				"$rustc"
 			],
 			"group": "build",
-			"label": "rust: cargo build"
+			"label": "Build project"
+		},
+		{
+			"type": "cargo",
+			"command": "build",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"args": [
+				"--example",
+				"lab01",
+			],
+			"group": "build",
+			"label": "Build example"
 		},
 	]
 }
