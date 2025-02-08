@@ -20,7 +20,7 @@
             "type": "cppvsdbg",
             "request": "launch",
             "name": "Debug example",
-            "program": "${workspaceRoot}/target/debug/examples/lab01.exe",
+            "program": "${workspaceRoot}/target/debug/examples/lab02.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
